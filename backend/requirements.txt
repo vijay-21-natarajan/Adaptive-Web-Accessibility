@@ -1,0 +1,29 @@
+# ==== Core Framework ====
+Flask==3.0.3
+Flask-Login==0.6.3
+Flask-WTF==1.2.1
+Flask-Cors==4.0.0
+flask-cors
+Flask-SQLAlchemy==3.1.1
+Flask-JWT-Extended==4.6.0
+werkzeug==3.0.3
+
+# ==== Machine Learning ====
+scikit-learn==1.5.2
+pandas==2.2.3
+numpy==2.1.2
+joblib==1.4.2
+
+# ==== Data Visualization (Optional) ====
+matplotlib==3.9.2
+seaborn==0.13.2
+
+# ==== HTML / Template Rendering ====
+Jinja2==3.1.4
+
+# ==== Deployment ====
+gunicorn==23.0.0
+
+# ==== Utilities ====
+requests==2.32.3
+python-dotenv==1.0.1

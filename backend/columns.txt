@@ -1,0 +1,25 @@
+FEATURE COLUMNS:
+user_id
+age_group
+disability_type
+preferred_language
+cognitive_load_threshold
+session_id
+page_id
+time_spent
+scroll_depth
+click_count
+navigation_pattern
+font_size
+color_contrast
+narration_enabled
+navigation_mode
+highlight_links
+error_rate
+reaction_time
+cognitive_load_score
+user_feedback
+task_completion_rate
+satisfaction_score
+accessibility_score
+improvement_over_time

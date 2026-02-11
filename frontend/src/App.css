@@ -1,0 +1,40 @@
+.form-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: #f8f9fa;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+select, input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 20px;
+  background: #e9f5e9;
+  padding: 15px;
+  border-radius: 8px;
+}

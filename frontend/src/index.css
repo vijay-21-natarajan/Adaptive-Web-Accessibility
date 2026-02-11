@@ -1,0 +1,47 @@
+:root {
+  --app-font-size: 16px;
+  --app-contrast-filter: none;
+  --app-bg-color: #ffffff;
+  --app-text-color: #000000;
+  --app-gap: 15px;
+  --app-padding: 10px 20px;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  font-size: var(--app-font-size);
+  filter: var(--app-contrast-filter);
+  background-color: var(--app-bg-color);
+  color: var(--app-text-color);
+  transition: all 0.5s ease;
+  /* Increased duration for smoother layout shifts */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Contrast Themes */
+.theme-high {
+  --app-bg-color: #000000;
+  --app-text-color: #ffff00;
+}
+
+/* Common Layout Utilities */
+.flex-adaptive {
+  display: flex;
+  gap: var(--app-gap);
+  transition: gap 0.5s ease;
+}
+
+.padded-adaptive {
+  padding: var(--app-padding);
+  transition: padding 0.5s ease;
+}
