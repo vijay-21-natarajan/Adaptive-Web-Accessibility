@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import "./Auth.css";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -21,22 +22,34 @@ export default function Signup() {
   };
 
   return (
-    <div className="signup-container">
-      <h2>Signup</h2>
-      <form onSubmit={handleSignup}>
-        <input placeholder="Username" onChange={(e) => setUsername(e.target.value)} required />
-        <input placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)} required />
-        <input
-          placeholder="Password"
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Signup</button>
-      </form>
-      <p>
-        Already have an account? <Link to="/">Login</Link>
-      </p>
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <h1>Adaptive Web</h1>
+        <h2>Create an account</h2>
+        <form className="auth-form" onSubmit={handleSignup}>
+          <input
+            placeholder="Username"
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <input
+            placeholder="Email"
+            type="email"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            placeholder="Password"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button className="auth-button" type="submit">Signup</button>
+        </form>
+        <p className="auth-footer">
+          Already have an account? <Link to="/">Login</Link>
+        </p>
+      </div>
     </div>
   );
 }

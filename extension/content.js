@@ -11,15 +11,18 @@ async function applyPreferences() {
         if (response && response.accessibility_profile) {
             currentProfile = response.accessibility_profile;
             injectStyles(currentProfile);
+            console.log("[AI Accessibility] Profile loaded successfully.");
         } else {
-            console.log("[AI Accessibility] No profile found. Login in popup.");
+            console.warn("[AI Accessibility] EXTENSION INACTIVE: No profile found. You MUST login inside the STIRS extension popup (click the icon in your toolbar) to enable tracking on this site.");
+            // Retry every 30 seconds until logged in
+            setTimeout(applyPreferences, 30000);
         }
     });
 }
 
 function injectStyles(profile) {
     const { font_size, contrast, smart_highlighting, focus_mode } = profile;
-    console.log(`[AI Accessibility] Applying Settings: Font=${font_size}, Highlighting=${smart_highlighting}, Focus=${focus_mode}`);
+    console.log(`[AI Accessibility] Applying Settings: Font=${font_size}, Highlighting=${smart_highlighting}, Focus=${focus_mode}, Contrast=${contrast}`);
 
     let styleTag = document.getElementById("ai-accessibility-styles");
     if (!styleTag) {
@@ -30,15 +33,24 @@ function injectStyles(profile) {
 
     let css = "";
 
-    // Original Accessibility Styles
-    if (font_size === "large") {
-        css += "html, body, p, div, span, li, a { font-size: 1.25rem !important; line-height: 1.6 !important; }\n";
-    } else if (font_size === "small") {
-        css += "html, body, p, div, span, li, a { font-size: 0.875rem !important; }\n";
-    }
+    // Comprehensive Font Scaling
+    const sizeMap = {
+        'small': '0.9rem',
+        'medium': '1.1rem',
+        'large': '1.4rem'
+    };
+    const targetSize = sizeMap[font_size] || '1.1rem';
 
+    css += `html, body, p, div, span, li, a, h1, h2, h3, h4, h5, h6, button, input, label { 
+        font-size: ${targetSize} !important; 
+        line-height: 1.5 !important; 
+    }\n`;
+
+    // Contrast Logic
     if (contrast === "high") {
-        css += "html { filter: contrast(1.2) brightness(1.05) !important; }\nbody { background-color: #ffffff !important; color: #000000 !important; }\n";
+        css += "html { filter: contrast(1.3) brightness(1.05) !important; }\nbody { background-color: #ffffff !important; color: #000000 !important; }\n";
+    } else if (contrast === "low") {
+        css += "html { filter: contrast(0.8) brightness(1.1) !important; }\n";
     }
 
     // Smart Highlighting Animation
@@ -89,33 +101,65 @@ function applySmartFeatures(liveLoad) {
 
 // Cognitive Tracking Port
 let clicks = 0;
+let jitter = 0;
+let lastPos = { x: 0, y: 0 };
 let startTime = Date.now();
 
 document.addEventListener('click', () => {
     clicks++;
 });
 
-// Report metrics every 10 seconds if logged in for real-time response
+document.addEventListener('mousemove', (e) => {
+    const dx = e.clientX - lastPos.x;
+    const dy = e.clientY - lastPos.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > 30) {
+        jitter += 0.1;
+        if (jitter % 1 < 0.2) console.log("[AI Accessibility] Jitter detected:", jitter.toFixed(1));
+    }
+    lastPos = { x: e.clientX, y: e.clientY };
+});
+
+// Keyboard debug trigger (Alt + Shift + S)
+document.addEventListener('keydown', (e) => {
+    if (e.altKey && e.shiftKey && e.key === 'S') {
+        console.log("[AI Accessibility] Manual debug trigger (Alt+Shift+S) detected!");
+        showStressAlert("DEBUG ALERT: The Stress UI is working on this Page!");
+    }
+});
+
+console.log("[AI Accessibility] Tracking active. Shake mouse or press Alt+Shift+S to test.");
+
+// Report metrics every 10 seconds if logged in (Heartbeat added)
 setInterval(() => {
-    if (!currentProfile) return;
+    if (!currentProfile) {
+        console.log("[AI Accessibility] Heartbeat: Waiting for profile/login...");
+        return;
+    }
 
     const duration = (Date.now() - startTime) / 1000;
-
-    // Simple load score calculation for extension (frontend version)
-    const loadScore = Math.min((clicks * 0.05) + (duration * 0.001), 1.0);
+    console.log(`[AI Accessibility] Heartbeat: Reporting Clicks=${clicks}, Jitter=${jitter.toFixed(1)}`);
 
     const metrics = {
         click_count: clicks,
         time_spent: duration,
         scroll_depth: getScrollPercent(),
+        mouse_jitter: jitter,
         error_count: 0
     };
 
-    chrome.runtime.sendMessage({ type: "REPORT_METRICS", data: metrics });
+    chrome.runtime.sendMessage({ type: "REPORT_METRICS", data: metrics }, (res) => {
+        console.log("[AI Accessibility] Backend Response:", res);
+        if (res && res.cognitive_load_score > 0.4) {
+            console.log("[AI Accessibility] !!! TRIGGERING STRESS ALERT !!! Score:", res.cognitive_load_score);
+            showStressAlert("AI detected frustration. Would you like to simplify the page layout?");
+        }
+    });
 
-    // Activate Smart Highlighting if threshold met
-    applySmartFeatures(loadScore);
+    // Reset jitter after report
+    jitter = 0;
 }, 10000);
+
 
 function getScrollPercent() {
     const h = document.documentElement,

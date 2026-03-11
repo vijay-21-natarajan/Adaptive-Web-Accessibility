@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { AccessibilityProvider } from "./context/AccessibilityContext";
 import AccessibilityMiddleware from "./components/AccessibilityMiddleware";
@@ -10,6 +10,24 @@ import CognitiveTracker from "./components/CognitiveTracker";
 import Dashboard from "./components/Dashboard";
 import "./App.css";
 
+const Navbar = () => {
+  const location = useLocation();
+  const hideNav = location.pathname === "/" || location.pathname === "/signup";
+
+  if (hideNav) return null;
+
+  return (
+    <nav className="dashboard-nav">
+      <h1>Adaptive Web</h1>
+      <div className="nav-links">
+        <Link to="/dashboard" className={location.pathname === "/dashboard" ? "active" : ""}>Accessibility</Link>
+        <Link to="/monitoring" className={location.pathname === "/monitoring" ? "active" : ""}>Insights</Link>
+        <Link to="/">Logout</Link>
+      </div>
+    </nav>
+  );
+};
+
 export default function App() {
   return (
     <Router>
@@ -18,6 +36,7 @@ export default function App() {
           <CognitiveTracker>
             <AccessibilityMiddleware />
             <div className="app-container">
+              <Navbar />
               <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />

@@ -47,7 +47,7 @@ class AccessibilityProfile(db.Model):
             "focus_mode": self.focus_mode,
             "layout_preference": self.layout_preference,
             "voice_assistant_enabled": self.voice_assistant_enabled,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None
+            "updated_at": self.updated_at.isoformat() + "Z" if self.updated_at else None
         }
 
 class CognitiveLog(db.Model):
@@ -77,5 +77,5 @@ class CognitiveLog(db.Model):
             "cognitive_load_score": self.cognitive_load_score,
             "mouse_jitter": self.mouse_jitter,
             "dwell_time": self.dwell_time,
-            "timestamp": self.timestamp.isoformat()
+            "timestamp": self.timestamp.isoformat() + "Z"
         }
